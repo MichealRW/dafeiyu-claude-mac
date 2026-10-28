@@ -1,0 +1,422 @@
+{
+  "idle": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "待机呼吸休闲",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      195,
+      59,
+      436,
+      331
+    ]
+  },
+  "look": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "东张西望",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      208,
+      62,
+      442,
+      331
+    ]
+  },
+  "dance": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "可爱宅舞",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      207,
+      55,
+      444,
+      332
+    ]
+  },
+  "hearts": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "点击回应-挠痒咯咯笑",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      205,
+      57,
+      439,
+      331
+    ]
+  },
+  "happy": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "点击回应-开心跃动",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      183,
+      18,
+      458,
+      332
+    ]
+  },
+  "shy": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "点击回应-害羞惊讶",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      115,
+      63,
+      437,
+      331
+    ]
+  },
+  "angry": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "点击回应-傲娇生气",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      202,
+      60,
+      430,
+      332
+    ]
+  },
+  "celebrate": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "工作状态-雀跃庆祝",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      172,
+      17,
+      472,
+      331
+    ]
+  },
+  "sleep": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "原地小憩沉眠",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      206,
+      29,
+      431,
+      332
+    ]
+  },
+  "wave": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "点击回应-元气挥手",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      207,
+      36,
+      431,
+      331
+    ]
+  },
+  "stretch": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "超大伸懒腰",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      211,
+      57,
+      431,
+      331
+    ]
+  },
+  "dizzy": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "小幅度原地360度旋转展示",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      190,
+      47,
+      468,
+      332
+    ]
+  },
+  "fish": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "鲸鱼吐泡泡特效",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      114,
+      35,
+      431,
+      332
+    ]
+  },
+  "coding": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "写代码",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      210,
+      60,
+      432,
+      331
+    ]
+  },
+  "think": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "深度思考碎碎念",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      92,
+      52,
+      552,
+      336
+    ]
+  },
+  "talk": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "碎碎念-对屏碎碎念",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      212,
+      61,
+      429,
+      331
+    ]
+  },
+  "drag": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "被鼠标拖拽悬空反馈",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      204,
+      25,
+      451,
+      331
+    ]
+  },
+  "snack": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "大口吃零食",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      35,
+      43,
+      592,
+      357
+    ]
+  },
+  "rice": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "吃白饭",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      202,
+      62,
+      436,
+      338
+    ]
+  },
+  "tea": {
+    "frames": 181,
+    "fps": 18,
+    "duration": 10.055555555555555,
+    "source": "吃早餐",
+    "anchor": [
+      192,
+      324
+    ],
+    "body_height": 260,
+    "size": [
+      384,
+      360
+    ],
+    "alpha_bbox": [
+      209,
+      60,
+      431,
+      330
+    ]
+  }
+}

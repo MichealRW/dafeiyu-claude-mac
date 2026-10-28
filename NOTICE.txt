@@ -1,0 +1,48 @@
+大肥鱼桌宠 · Claude 用量伴侣（本机 Mac 适配版）
+
+原桌宠代码和三视图素材：
+https://github.com/1190fasheqi/dafeiyu-pet
+原始版本：5b0e01856116bd2bae82df1f43c32faa5f056196
+保留原 MIT LICENSE。
+
+本机新增：macOS 菜单栏、窗口与登录启动适配；本地 Claude 用量统计；
+DeepSeek 官方余额；DeepSeek Flash 对话；流式记录去重；跨日记账。
+没有改动 Claude 的模型、接口或权限配置。
+
+DeepSeek 娘为社区同人形象，本项目与 DeepSeek、Anthropic 无隶属关系。
+角色社区原型：上善无形「溟月」，女仆装二创：ZipZipPipe。
+
+第三方库：Python、PySide6 / Qt（LGPLv3）、requests（Apache-2.0）、
+psutil（BSD-3-Clause）、PyInstaller（GPLv2 + bootloader exception）。
+PySide6 和 Qt 保持动态链接形式，未作修改；对应源码可通过 Qt/PySide 官方获取：
+https://code.qt.io/cgit/pyside/pyside-setup.git/
+https://code.qt.io/cgit/qt/
+
+统计说明：
+1. Claude token 数据来自 ~/.claude/projects 下的 JSONL 日志（含子代理记录）。
+   按会话与消息 ID 去重，输入包含缓存读取/创建，输出包括 API 报告的输出用量。
+2. 余额是 DeepSeek 官方 /user/balance 返回值。监测扣款是相邻余额的正向差额。
+   从开始监测时累计；不能反推今天启动前的全部消费；充值/赠送不视作负消耗。
+   同账户其他客户端的消费也会影响余额；余额更新可能存在延迟。
+3. 聊天使用 deepseek-flash 非思考模式，单独消耗同一账户余额。
+   只发送你在桌宠输入的内容，不发送 Claude 会话、代码或屏幕。
+4. API Key 从现有 Claude DeepSeek 配置读取，不另存副本。
+
+动作节奏与分层方案参考（没有直接复制其角色美术）：
+https://github.com/lokicorvus/crosspet/blob/main/app/web/effects.js
+https://github.com/chinaszzt/desktop-cat/blob/main/src/main.js
+本机 SVG 道具与动作控制由 effects.py 生成。
+
+完整角色动画（v1.1 更新）：
+原作者：https://github.com/PC2005-cloud/dsh-pet
+素材来源：https://github.com/Refining-colors/pet-with-you
+演示视频：https://www.bilibili.com/video/BV1uKa66VEd6/
+动画/角色素材允许开源使用、禁止商用，衍生展示和分发须附原作者地址。
+详细署名及素材说明见 ANIMATION_ATTRIBUTION.md。
+本地将透明 WebM 无改绘地解码为 PNG 帧，以便 macOS 原生播放。
+原代码的 MIT 授权不改变角色和动画素材的非商用约定。
+
+公开版 v1.2：MichealRW / https://github.com/MichealRW/dafeiyu-claude-mac
+新增三击余额气泡、微笑形象应用图标和动图文档。
+代码 MIT；角色动画及衍生图标 / GIF 沿用上游素材约定。
+详见 ASSET_LICENSE.md、ANIMATION_ATTRIBUTION.md 和 LICENSE.upstream。
