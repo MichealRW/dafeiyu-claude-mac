@@ -10,6 +10,7 @@ from PySide6.QtCore import QRectF, QPointF, Qt, QByteArray
 from PySide6.QtGui import QPainter, QPainterPath, QColor, QPen, QFont
 from PySide6.QtSvg import QSvgRenderer
 from frame_animation import CharacterClips
+from bubbles import draw_speech,round_font
 
 ACTIONS = {
     'dance': ('🎵 跳舞', 13, '来一段小鲸鱼摇摆舞～'),
@@ -96,8 +97,11 @@ class Motion:
         clip = name if self.clips.has(name) else None
         elapsed=t*self.rate
         loop=False
+        thought=getattr(pet,'balance_thought',None)
         if pet.dragging and self.clips.has('drag'):
             clip='drag';elapsed=now;loop=True
+        elif thought and thought.active():
+            clip='think';elapsed=thought.pose_elapsed();name=None
         elif name is None and pet.target is None and self.clips.has('idle'):
             clip='idle';elapsed=time.monotonic()-self.clips.idle_started;loop=True
         if clip and self.clips.draw(p,pet,clip,elapsed,loop):
@@ -243,14 +247,12 @@ class Motion:
         p.end()
 
     def draw_caption(self,p,pet,now,name):
-        # Bubble stays in its own coordinate layer; it never spins with the body.
-        if pet.bubble_text and now<pet.bubble_until:
-            p.setFont(QFont('PingFang SC',10))
-            p.setPen(Qt.PenStyle.NoPen);p.setBrush(QColor(249,252,255,240))
-            p.drawRoundedRect(QRectF(4,4,pet.width()-8,43),11,11)
-            p.setPen(QColor('#3c5777'))
-            p.drawText(QRectF(10,7,pet.width()-20,37),Qt.AlignmentFlag.AlignCenter|Qt.TextFlag.TextWordWrap,pet.bubble_text)
+        thought=getattr(pet,'balance_thought',None)
+        if thought and thought.active():
+            thought.draw(p,pet)
+        else:
+            draw_speech(p,pet,now)
         if name:
             p.setPen(QColor('#6585a4'))
-            p.setFont(QFont('PingFang SC',8))
+            p.setFont(round_font(12))
             p.drawText(QRectF(0,pet.height()-14,pet.width(),14),Qt.AlignmentFlag.AlignCenter,ACTIONS[name][0])

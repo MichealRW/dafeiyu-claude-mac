@@ -20,6 +20,7 @@ import upstream_pet as base
 from monitor import DATA, CST, UsageReader, BalanceLedger, request_api, chat, write_private, api_key
 from effects import Motion, ACTIONS
 from mac_window import keep_on_top
+from bubbles import BalanceThought
 
 APP_BUNDLE = Path.home() / 'Applications/大肥鱼桌宠.app'
 AUTOSTART = Path.home() / 'Library/LaunchAgents/local.dafeiyu.claude.plist'
@@ -280,6 +281,7 @@ class Pet(base.PetWindow):
         self.usage_snapshot = {}
         self.balance_snapshot = []
         self.balance_bubble_pending = False
+        self.balance_thought = BalanceThought()
         self._balance_bubble_hold = 0
         self._click_count = 0
         self.click_interval_ms = QApplication.doubleClickInterval()
@@ -348,6 +350,8 @@ class Pet(base.PetWindow):
     def start_action(self, key, speak=True):
         if not hasattr(self,'motion'):
             return
+        if hasattr(self,'balance_thought'):
+            self.balance_thought.cancel()
         self.target = None
         self._set_dir('down',1)
         self.motion.start(key,self.cfg.get('dance_intensity',1.0))
@@ -365,6 +369,8 @@ class Pet(base.PetWindow):
         self.say('好，我安静陪着你～')
 
     def _maybe_idle_action(self):
+        if hasattr(self,'balance_thought') and self.balance_thought.active():
+            return
         if not hasattr(self,'motion') or self.motion.active():
             return
         if self.cfg.get('idle_actions',True) and time.monotonic()>self.next_idle:
@@ -504,14 +510,15 @@ class Pet(base.PetWindow):
         self.save_config()
 
     def say(self, text, inner=False):
-        if time.monotonic() < getattr(self,'_balance_bubble_hold',0):
+        if hasattr(self,'balance_thought') and self.balance_thought.active():
             return
         super().say(text,inner)
+        self._bubble_started_tick=self.t*base.TICK/1000.0
+        self.bubble_until=self._bubble_started_tick+max(2.8,min(5.2,1.3+len(text)*.09))
 
     def _show_balance_text(self, text):
         super().say(text)
-        self.bubble_until = self.t * base.TICK / 1000.0 + 5
-        self._balance_bubble_hold = time.monotonic() + 5
+        self.bubble_until = 0  # The animated thought scene owns its lifetime.
         self.update()
 
     def _balance_text(self):
@@ -522,6 +529,12 @@ class Pet(base.PetWindow):
 
     def show_balance_bubble(self):
         self.balance_bubble_pending = True
+        self.balance_thought.begin(self.balance_snapshot)
+        self.motion.name=None
+        self.target=None
+        self._set_dir('down',1)
+        self.rest_until=self.t*base.TICK+14000
+        self.next_idle=time.monotonic()+60
         self._show_balance_text(self._balance_text() if self.balance_snapshot else '正在查余额…')
         self.refresh_balance()
 
@@ -593,7 +606,7 @@ class Pet(base.PetWindow):
         if event[1]=='user' and event[0]:
             try:
                 age=(datetime.now(CST)-datetime.fromisoformat(event[0].replace('Z','+00:00'))).total_seconds()
-                if age<90 and not self.chat_paused and not self.motion.active():
+                if age<90 and not self.chat_paused and not self.motion.active() and not self.balance_thought.active():
                     self.start_action('coding',speak=False)
             except ValueError:
                 pass
@@ -602,7 +615,7 @@ class Pet(base.PetWindow):
         if self.last_request and ident != self.last_request:
             total = sum(r[k] for k in ('input','output','cache','creation'))
             self.say(f'Claude 又完成一次请求：{compact(total)} tokens')
-            if not self.chat_paused:
+            if not self.chat_paused and not self.balance_thought.active():
                 self.start_action('celebrate',speak=False)
             QTimer.singleShot(2000, self.refresh_balance)
         self.last_request = ident
@@ -626,20 +639,22 @@ class Pet(base.PetWindow):
         self.hud.update_balance(rows)
         if self.balance_bubble_pending:
             self.balance_bubble_pending = False
-            self._show_balance_text(self._balance_text())
+            if self.balance_thought.resolve(rows):
+                self._show_balance_text(self._balance_text())
         self.save_snapshot()
 
     def on_balance_error(self, message):
         self.balance_busy = False
         if self.balance_bubble_pending:
             self.balance_bubble_pending = False
-            self._show_balance_text((self._balance_text()+'（暂未刷新）') if self.balance_snapshot
-                else '余额暂时查不到，稍后再试～')
+            if self.balance_thought.resolve(error=True):
+                self._show_balance_text((self._balance_text()+'（暂未刷新）') if self.balance_snapshot
+                    else '余额暂时查不到，稍后再试～')
         self.hud.fresh.setText(message + ' · 30 秒后重试')
         write_private(DATA/'balance-error.json', {'at':datetime.now(CST).isoformat(),'error':message})
 
     def save_snapshot(self):
-        write_private(DATA/'status.json', {'version':'1.2.0','updated':datetime.now(CST).isoformat(),
+        write_private(DATA/'status.json', {'version':'1.3.0','updated':datetime.now(CST).isoformat(),
             'claude':self.usage_snapshot,'balance':self.balance_snapshot,
             'windows':{'pet_visible':self.isVisible(),'panel_visible':self.hud.isVisible(),
                 'pet_topmost':bool(self.windowFlags() & Qt.WindowType.WindowStaysOnTopHint),
@@ -700,7 +715,8 @@ class Pet(base.PetWindow):
         QMessageBox.information(self, '关于大肥鱼桌宠',
             '大肥鱼桌宠 · Claude 用量伴侣（macOS）\n\n'
             '单击和双击：人物反馈；拖动：移动；右键：聊天、投喂、动作菜单。\n'
-            '快速连续三击：头顶显示余额气泡，并刷新官方余额。\n'
+            '快速连续三击：托腮想一想，云朵气泡显示余额，并刷新官方余额。\n'
+            '说话和独白：圆体、大字号、弹入浮动，随人物姿势贴近头顶。\n'
             f'动作与表情面板：干饭、跳舞、眨眼、害羞、生气等 {len(ACTIONS)} 种动作。\n'
             'Claude tokens 来自 ~/.claude/projects，本地读取并去除流式重复。\n'
             '余额来自 DeepSeek 官方接口，账户扣款包含其他客户端。\n'

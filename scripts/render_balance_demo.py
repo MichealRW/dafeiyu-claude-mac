@@ -28,19 +28,24 @@ with tempfile.TemporaryDirectory() as tmp:
         pet.timer.stop();pet.poll.stop();pet.balance_timer.stop()
         pet.hud.hide();pet.set_size(.9);pet.setFixedWidth(400)
         pet.bubble_text='';pet.bubble_until=0
+        clock=[100.0]
+        pet.balance_thought.clock=lambda:clock[0]
         pet.balance_snapshot=[{'currency':'CNY','balance':'12.34','spent':'0.00'}]
         point=QPoint(200,245)
         frames=[];clicked=0
-        for i in range(72):
+        for i in range(108):
             t=i/12
+            clock[0]=100+t
             pet.t=int(t*1000/main.base.TICK)
             for click_time in [.65,.82,.99]:
                 if clicked==[.65,.82,.99].index(click_time) and t>=click_time:
                     QTest.mouseClick(pet,Qt.MouseButton.LeftButton,pos=point)
                     clicked+=1
+            if i==20:
+                pet.on_balance([{'currency':'CNY','balance':'12.34','spent':'0.00'}])
             pet.motion.clips.idle_started=time.monotonic()-t
             pet.motion.clips.previous=None
-            pet.motion.clips.current='idle'
+            pet.motion.clips.current='think' if pet.balance_thought.active() else 'idle'
             canvas=QImage(pet.size(),QImage.Format.Format_RGBA8888)
             canvas.fill(QColor('#edf5fb'))
             pet.render(canvas)

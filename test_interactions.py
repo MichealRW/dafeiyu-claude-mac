@@ -8,6 +8,7 @@ from unittest.mock import patch
 from PySide6.QtWidgets import QApplication, QMenu
 from PySide6.QtTest import QTest
 from PySide6.QtCore import Qt,QPoint
+from PySide6.QtGui import QImage
 import main
 
 
@@ -70,6 +71,9 @@ class InteractionTests(unittest.TestCase):
             self.triple_click()
             refresh.assert_called_once()
         self.assertEqual(self.pet.bubble_text,'余额 ¥12.34')
+        image=QImage(self.pet.size(),QImage.Format.Format_ARGB32)
+        self.pet.render(image)
+        self.assertEqual(self.pet.motion.clips.last_name,'think')
         self.assert_no_panel()
         self.assertFalse(self.pet._click_timer.isActive())
         self.pet.say('ordinary idle message')
@@ -77,6 +81,15 @@ class InteractionTests(unittest.TestCase):
         self.pet.on_balance([{'currency':'CNY','balance':'12.30','spent':'0.05'}])
         self.assertEqual(self.pet.bubble_text,'余额 ¥12.30')
         self.assertFalse(self.pet.balance_bubble_pending)
+
+    def test_manual_action_interrupts_thought_and_late_reply_keeps_its_speech(self):
+        self.triple_click()
+        self.pet.start_action('wave')
+        speech=self.pet.bubble_text
+        self.pet.on_balance([{'currency':'CNY','balance':'12.30','spent':'0.00'}])
+        self.assertFalse(self.pet.balance_thought.active())
+        self.assertEqual(self.pet.motion.name,'wave')
+        self.assertEqual(self.pet.bubble_text,speech)
 
     def test_triple_click_handles_missing_cache_and_refresh_failure(self):
         self.triple_click()

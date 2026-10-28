@@ -15,4 +15,4 @@ coll=COLLECT(exe,a.binaries,a.datas,strip=False,upx=False,name='大肥鱼桌宠'
 app=BUNDLE(coll,name='大肥鱼桌宠.app',icon=str(ROOT/'assets/AppIcon.icns'),
     bundle_identifier='local.dafeiyu.claude',
     info_plist={'LSUIElement':True,'CFBundleDisplayName':'大肥鱼桌宠',
-        'CFBundleShortVersionString':'1.2.0','NSHighResolutionCapable':True})
+        'CFBundleShortVersionString':'1.3.0','NSHighResolutionCapable':True})

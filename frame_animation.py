@@ -4,7 +4,7 @@ import sys
 import time
 from pathlib import Path
 from collections import OrderedDict
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap,QImage
 from PySide6.QtCore import QRectF
 
 
@@ -17,6 +17,8 @@ class CharacterClips:
         except (OSError,ValueError):
             self.manifest={}
         self.cache=OrderedDict()
+        self.top_cache={}
+        self.content_top=110
         self.previous=None
         self.current=None
         self.changed_at=0
@@ -41,9 +43,15 @@ class CharacterClips:
             return self.cache[key],data,index
         pix=QPixmap(str(self.root/name/f'{index:04d}.png'))
         self.cache[key]=pix
+        alpha=pix.toImage().convertToFormat(QImage.Format.Format_Alpha8)
+        raw=bytes(alpha.constBits()) if not alpha.isNull() else b''
+        stride=alpha.bytesPerLine()
+        self.top_cache[key]=next((y for y in range(alpha.height())
+            if any(raw[y*stride:y*stride+alpha.width()])),0)
         # At most about 16 MiB of decoded frames, rather than every clip in RAM.
         while len(self.cache)>30:
-            self.cache.popitem(last=False)
+            old_key,_=self.cache.popitem(last=False)
+            self.top_cache.pop(old_key,None)
         return pix,data,index
 
     def draw(self,p,pet,name,elapsed,loop=False):
@@ -62,6 +70,7 @@ class CharacterClips:
         x=pet.width()/2-data['anchor'][0]*scale
         y=bottom-data['anchor'][1]*scale
         rect=QRectF(x,y,pix.width()*scale,pix.height()*scale)
+        self.content_top=y+self.top_cache.get((name,index),0)*scale
         fade=min(1,(now-self.changed_at)/.13)
         if self.previous and fade<1:
             old,old_rect=self.previous
